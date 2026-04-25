@@ -21,6 +21,7 @@
 1. ابتدا مخزن را کلون کنید یا فایل ZIP را دانلود و استخراج کنید:
 ```bash
 git clone [https://github.com/banicoms/banich.git](https://github.com/banicoms/banich.git)
+
 ۲. مرورگر گوگل کروم را باز کرده و به آدرس chrome://extensions بروید.
 ۳. گزینه Developer mode را در گوشه سمت راست بالا فعال کنید.
 ۴. بر روی دکمه Load unpacked کلیک کرده و پوشه پروژه را انتخاب کنید.
