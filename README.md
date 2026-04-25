@@ -21,3 +21,35 @@
 1. ابتدا مخزن را کلون کنید یا فایل ZIP را دانلود و استخراج کنید:
 ```bash
 git clone [https://github.com/banicoms/banich.git](https://github.com/banicoms/banich.git)
+۲. مرورگر گوگل کروم را باز کرده و به آدرس chrome://extensions بروید.
+۳. گزینه Developer mode را در گوشه سمت راست بالا فعال کنید.
+۴. بر روی دکمه Load unpacked کلیک کرده و پوشه پروژه را انتخاب کنید.
+
+نحوه استفاده (Usage)
+پس از نصب، افزونه به طور خودکار بر روی صفحات وب اعمال می‌شود. شما می‌توانید با کلیک بر روی آیکون افزونه در نوار ابزار مرورگر، وضعیت فعال یا غیرفعال بودن آن را مدیریت کنید.
+
+تکنولوژی‌های استفاده شده
+HTML / CSS (Custom Stylesheets)
+
+JavaScript
+
+Chrome Extension API (Manifest V3)
+
+مشارکت (Contributing)
+مشارکت‌های شما باعث افتخار ماست! اگر ایده‌ای دارید یا مشکلی مشاهده کردید، لطفاً یک Issue ثبت کنید یا یک Pull Request ارسال کنید.
+
+پروژه را Fork کنید.
+
+یک Branch برای ویژگی جدید بسازید (git checkout -b feature/AmazingFeature).
+
+تغییرات خود را Commit کنید (git commit -m 'Add some AmazingFeature').
+
+به Branch اصلی Push کنید (git push origin feature/AmazingFeature).
+
+یک Pull Request باز کنید.
+
+لایسنس
+این پروژه تحت لایسنس MIT منتشر شده است. برای اطلاعات بیشتر فایل LICENSE را مطالعه کنید.
+
+ساخته شده با ❤️ برای کاربران فارسی‌زبان
+GitHub Profile
