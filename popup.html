@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banich</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --glass-bg: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.10);
+      --glass-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --accent: #7C6AFF;
+      --accent2: #00C9FF;
+      --gold: #D4AF37;
+      --red: #FF4560;
+      --green: #00E676;
+      --bg: #080c14;
+      --text: #e8eaf6;
+      --muted: #4a5068;
+    }
+
+    html, body {
+      width: 310px;
+      background: transparent;
+      font-family: 'Vazirmatn', Tahoma, sans-serif;
+      direction: rtl;
+      overflow: hidden;
+    }
+
+    /* ─── OUTER WRAPPER ──────────────────────────────── */
+    .shell {
+      width: 310px;
+      background:
+        radial-gradient(ellipse at 10% 0%, rgba(124,106,255,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 90% 100%, rgba(0,201,255,0.08) 0%, transparent 55%),
+        linear-gradient(160deg, #0d1120 0%, #080c14 60%, #0a0d1a 100%);
+      overflow: hidden;
+      border-radius: 0;
+    }
+
+    /* ─── AD BANNER ──────────────────────────────────── */
+    #adBanner {
+      display: none;
+      background: linear-gradient(135deg, rgba(0,255,150,0.06), rgba(0,150,80,0.03));
+      border-bottom: 1px solid rgba(0,230,118,0.15);
+      padding: 10px 14px 10px 36px;
+      position: relative;
+    }
+    #adBanner.show { display: block; }
+
+    .ad-x {
+      position: absolute;
+      top: 8px; left: 10px;
+      width: 20px; height: 20px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 50%;
+      color: #666;
+      font-size: 10px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+      flex-shrink: 0;
+    }
+    .ad-x:hover { background: rgba(255,255,255,0.12); color: #ccc; }
+
+    .ad-tag {
+      font-size: 9px; letter-spacing: 1.5px; color: rgba(0,230,118,0.55);
+      text-transform: uppercase; margin-bottom: 4px;
+    }
+    .ad-title {
+      font-size: 12px; font-weight: 700; color: #d0f0e0; margin-bottom: 3px;
+    }
+    .ad-body {
+      font-size: 10.5px; color: #5a7a6a; margin-bottom: 8px; line-height: 1.6;
+    }
+    .ad-cta {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: linear-gradient(90deg, #00b864, #009950);
+      color: #fff;
+      font-family: 'Vazirmatn', Tahoma, sans-serif;
+      font-size: 11px; font-weight: 700;
+      padding: 5px 13px; border-radius: 8px;
+      text-decoration: none; transition: opacity .2s;
+    }
+    .ad-cta:hover { opacity: 0.85; }
+
+    /* ─── HEADER ─────────────────────────────────────── */
+    .header {
+      padding: 14px 16px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--glass-border);
+      position: relative;
+    }
+    .header::after {
+      content: '';
+      position: absolute; bottom: -1px; right: 16px;
+      width: 60px; height: 1px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    /* Rocket canvas in popup */
+    #rocketCanvas {
+      width: 44px; height: 44px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .htext {}
+    .app-name {
+      font-size: 22px; font-weight: 900; letter-spacing: 2px;
+      text-transform: uppercase; line-height: 1;
+      background: linear-gradient(135deg, #fff 0%, #a0a8ff 50%, #7C6AFF 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .app-sub {
+      font-size: 10px; color: var(--muted); margin-top: 3px; font-weight: 400;
+    }
+
+    /* ─── BODY ───────────────────────────────────────── */
+    .body { padding: 14px 14px 10px; display: flex; flex-direction: column; gap: 10px; }
+
+    /* ─── GLASS CARD ─────────────────────────────────── */
+    .glass-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+
+    /* ─── TOGGLE ─────────────────────────────────────── */
+    .toggle-area {
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+      cursor: pointer;
+      transition: background .2s;
+      user-select: none;
+    }
+    .toggle-area:hover { background: rgba(255,255,255,0.03); }
+
+    .toggle-icon {
+      font-size: 22px;
+      transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+      flex-shrink: 0;
+    }
+    .toggle-area.active .toggle-icon {
+      transform: translateY(-3px) scale(1.15);
+      filter: drop-shadow(0 4px 8px rgba(124,106,255,0.6));
+    }
+
+    .toggle-info { flex: 1; }
+    .toggle-label {
+      font-size: 14px; font-weight: 700; color: var(--text);
+      transition: color .3s;
+    }
+    .toggle-area.active .toggle-label { color: #a0c4ff; }
+    .toggle-desc {
+      font-size: 10px; color: var(--muted); margin-top: 2px; font-weight: 400;
+    }
+
+    /* iOS-style switch */
+    .switch {
+      width: 44px; height: 24px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      position: relative;
+      transition: all .3s ease;
+      flex-shrink: 0;
+    }
+    .switch::after {
+      content: '';
+      position: absolute;
+      top: 3px; right: 3px;
+      width: 16px; height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .toggle-area.active .switch {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-color: transparent;
+      box-shadow: 0 0 16px rgba(124,106,255,0.4);
+    }
+    .toggle-area.active .switch::after {
+      transform: translateX(-20px);
+    }
+
+    /* ─── STATUS ROW ─────────────────────────────────── */
+    .status-row {
+      padding: 10px 16px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .pill {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; color: var(--muted);
+    }
+    .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #2a2a3a;
+      transition: all .3s;
+      flex-shrink: 0;
+    }
+    .dot.on {
+      background: var(--green);
+      box-shadow: 0 0 7px rgba(0,230,118,0.7);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { box-shadow: 0 0 7px rgba(0,230,118,0.7); }
+      50% { box-shadow: 0 0 14px rgba(0,230,118,1); }
+    }
+
+    .status-text { transition: color .3s; }
+    .status-text.on { color: var(--green); }
+
+    .font-tag {
+      font-size: 9.5px; font-weight: 600; letter-spacing: 0.5px;
+      padding: 2px 8px; border-radius: 6px;
+      background: rgba(124,106,255,0.12);
+      border: 1px solid rgba(124,106,255,0.2);
+      color: rgba(160,150,255,0.8);
+    }
+
+    /* ─── DIVIDER ────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+      margin: 0 14px;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    .footer {
+      padding: 10px 16px 14px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .credit { font-size: 10px; color: var(--muted); }
+    .credit span { color: rgba(160,150,255,0.7); font-weight: 600; }
+    .copy { font-size: 10px; color: #2a2a40; }
+
+    /* ─── ROCKET ANIMATION IN POPUP ─────────────────── */
+    .rocket-wrap {
+      position: relative;
+    }
+    #rocketCanvas.launching {
+      animation: launch-wobble 0.5s ease;
+    }
+    @keyframes launch-wobble {
+      0% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+      100% { transform: rotate(0); }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- AD -->
+  <div id="adBanner">
+    <button class="ad-x" id="adClose">✕</button>
+    <div class="ad-tag">تبلیغ</div>
+    <div class="ad-title">🛡️ فیلترشکن ملی Banicom VPN</div>
+    <div class="ad-body">پلن‌های متنوع · قیمت مناسب · سرعت بالا · پایداری عالی</div>
+    <a class="ad-cta" href="https://t.me/BanicomVPN" target="_blank">
+      ✈️ کانال تلگرام
+    </a>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="rocket-wrap">
+      <canvas id="rocketCanvas" width="44" height="44"></canvas>
+    </div>
+    <div class="htext">
+      <div class="app-name">Banich</div>
+      <div class="app-sub">بانیچ، دستیار فارسی‌خوان کروم</div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+    <div class="glass-card">
+      <div class="toggle-area" id="toggleArea">
+        <div class="toggle-icon" id="toggleIcon">🚀</div>
+        <div class="toggle-info">
+          <div class="toggle-label" id="toggleLabel">فعال‌سازی فارسی‌ساز</div>
+          <div class="toggle-desc">RTL + فونت وزیرمتن</div>
+        </div>
+        <div class="switch" id="switchEl"></div>
+      </div>
+      <div class="status-row">
+        <div class="pill">
+          <div class="dot" id="dot"></div>
+          <span class="status-text" id="statusText">غیرفعال</span>
+        </div>
+        <div class="font-tag">Vazirmatn</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="credit">برنامه‌نویس: <span>شوان</span></div>
+    <div class="copy">© 2026 Banich</div>
+  </div>
+
+</div>
+<script src="popup.js"></script>
+</body>
+</html>
