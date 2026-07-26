@@ -1,14 +1,19 @@
 {
   "manifest_version": 3,
   "name": "Banich",
-  "version": "3.0",
-  "description": "بانیچ، دستیار فارسی‌خوان کروم | by شوان",
+  "version": "4.0.1",
+  "description": "بانیچ ۴.۰.۱، فارسی‌خوان با allowlist، استثناها، options page و فونت محلی | by شوان",
   "permissions": [
-    "activeTab",
     "scripting",
-    "storage"
+    "storage",
+    "tabs"
+  ],
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
   ],
   "action": {
+    "default_title": "Banich",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icon16.png",
@@ -16,16 +21,24 @@
       "128": "icon128.png"
     }
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "run_at": "document_end"
-    }
-  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "background": {
     "service_worker": "background.js"
   },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "page.css",
+        "assets/fonts/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",

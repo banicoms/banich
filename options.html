@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banich 4.0.1 Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main class="page">
+    <header class="hero card">
+      <div>
+        <div class="eyebrow">Banich 4.0.1</div>
+        <h1>تنظیمات پیشرفته بانیچ</h1>
+        <p>allowlist، exclude list، تنظیمات پیش‌فرض و override هر دامنه را از اینجا مدیریت کنید.</p>
+      </div>
+      <button id="reloadState" class="action-btn ghost" type="button">بازخوانی</button>
+    </header>
+
+    <section class="card quick-card">
+      <div>
+        <div class="section-label">سایت تب فعلی</div>
+        <div id="currentSiteHost" class="site-host">در حال بررسی…</div>
+        <p id="currentSiteHint" class="helper-text">برای ساخت قانون دقیق همین سایت از این کارت استفاده کنید.</p>
+      </div>
+      <div class="quick-actions">
+        <button id="quickAllow" class="action-btn" type="button">افزودن به allowlist</button>
+        <button id="quickExclude" class="action-btn danger" type="button">افزودن به استثنا</button>
+      </div>
+    </section>
+
+    <section class="card globals-card">
+      <div class="section-label">تنظیمات پیش‌فرض</div>
+      <div class="setting-grid">
+        <button id="fontToggle" class="setting-btn" type="button">
+          <span class="setting-icon">Aa</span>
+          <span>
+            <strong>فونت فارسی</strong>
+            <small>پیش‌فرض قوانین allow</small>
+          </span>
+        </button>
+        <button id="rtlToggle" class="setting-btn" type="button">
+          <span class="setting-icon">RTL</span>
+          <span>
+            <strong>چیدمان راست‌به‌چپ</strong>
+            <small>پیش‌فرض قوانین allow</small>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <section class="card form-card">
+      <div class="section-row">
+        <div>
+          <div class="section-label">قانون جدید / ویرایش قانون</div>
+          <p class="helper-text">نمونه ورودی: <code>example.com</code> یا <code>*.example.com</code> یا <code>https://example.com/*</code></p>
+        </div>
+        <button id="resetForm" class="text-btn" type="button">پاک کردن فرم</button>
+      </div>
+
+      <div class="form-grid">
+        <label class="field span-2">
+          <span>دامنه یا الگو</span>
+          <input id="patternInput" type="text" placeholder="example.com یا *.example.com">
+        </label>
+
+        <label class="field">
+          <span>نوع قانون</span>
+          <select id="ruleType">
+            <option value="allow">Allowlist</option>
+            <option value="exclude">Exclude</option>
+          </select>
+        </label>
+
+        <label class="field checkbox-field">
+          <input id="includeSubdomains" type="checkbox">
+          <span>شامل زیردامنه‌ها شود</span>
+        </label>
+
+        <label class="field allow-only">
+          <span>فونت برای این قانون</span>
+          <select id="fontMode">
+            <option value="inherit">از پیش‌فرض</option>
+            <option value="on">اجباری روشن</option>
+            <option value="off">اجباری خاموش</option>
+          </select>
+        </label>
+
+        <label class="field allow-only">
+          <span>RTL برای این قانون</span>
+          <select id="rtlMode">
+            <option value="inherit">از پیش‌فرض</option>
+            <option value="on">اجباری روشن</option>
+            <option value="off">اجباری خاموش</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button id="saveRule" class="action-btn" type="button">ذخیره قانون</button>
+      </div>
+    </section>
+
+    <section class="card list-card">
+      <div class="section-row">
+        <div>
+          <div class="section-label">Allowlist</div>
+          <p class="helper-text">سایت‌هایی که بانیچ روی آن‌ها اجازه اجرا دارد.</p>
+        </div>
+        <span id="allowCount" class="count-badge">0</span>
+      </div>
+      <div id="allowList" class="rule-list empty-state">هنوز قانونی ثبت نشده است.</div>
+    </section>
+
+    <section class="card list-card">
+      <div class="section-row">
+        <div>
+          <div class="section-label">Exclude List</div>
+          <p class="helper-text">سایت‌هایی که حتی با وجود قوانین کلی هم باید نادیده گرفته شوند.</p>
+        </div>
+        <span id="excludeCount" class="count-badge">0</span>
+      </div>
+      <div id="excludeList" class="rule-list empty-state">هنوز استثنایی ثبت نشده است.</div>
+    </section>
+
+    <p id="messageBar" class="message info">برای قوانین allow، فقط در زمان لازم از مرورگر مجوز همان دامنه گرفته می‌شود.</p>
+  </main>
+
+  <script src="content.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

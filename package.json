@@ -1,0 +1,11 @@
+{
+  "name": "banich",
+  "version": "4.0.1",
+  "private": true,
+  "description": "Banich browser extension",
+  "scripts": {
+    "lint": "node scripts/lint.js",
+    "test": "node scripts/test.js",
+    "check": "npm run lint && npm run test"
+  }
+}

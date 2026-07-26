@@ -1,0 +1,317 @@
+@font-face {
+  font-family: 'Banich Vazirmatn';
+  src: url('assets/fonts/Vazirmatn[wght].woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #09101c;
+  --surface: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.12);
+  --text: #edf2ff;
+  --muted: #98a4c3;
+  --accent: #7c6aff;
+  --accent-2: #00cfff;
+  --success: #0fd38a;
+  --warning: #ffb347;
+  --danger: #ff6b77;
+  --shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top right, rgba(124, 106, 255, 0.2), transparent 38%),
+    radial-gradient(circle at bottom left, rgba(0, 207, 255, 0.12), transparent 36%),
+    linear-gradient(180deg, #0d1322 0%, var(--bg) 100%);
+  color: var(--text);
+  font-family: 'Banich Vazirmatn', Tahoma, 'Segoe UI', sans-serif;
+}
+
+body { padding: 20px; }
+button, input, select { font: inherit; }
+code { font-family: ui-monospace, SFMono-Regular, monospace; }
+
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+  padding: 18px;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.eyebrow {
+  color: #aab4d8;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.hero p,
+.helper-text {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.section-label {
+  color: #b6c1de;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.site-host {
+  font-size: 22px;
+  font-weight: 800;
+  word-break: break-word;
+}
+
+.quick-card,
+.globals-card,
+.form-card,
+.list-card {
+  display: grid;
+  gap: 14px;
+}
+
+.quick-actions,
+.form-actions,
+.section-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.action-btn,
+.text-btn {
+  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, rgba(124, 106, 255, 0.22), rgba(0, 207, 255, 0.12));
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.action-btn.ghost,
+.text-btn {
+  background: rgba(255,255,255,0.04);
+}
+
+.action-btn.danger {
+  background: rgba(255, 107, 119, 0.14);
+  border-color: rgba(255, 107, 119, 0.2);
+}
+
+.text-btn {
+  border: 0;
+  color: #d7def5;
+}
+
+.setting-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.setting-btn {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  padding: 16px;
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  cursor: pointer;
+  text-align: right;
+}
+
+.setting-btn.is-on {
+  border-color: rgba(124, 106, 255, 0.4);
+  background: linear-gradient(180deg, rgba(124, 106, 255, 0.18), rgba(124, 106, 255, 0.08));
+}
+
+.setting-icon {
+  display: inline-grid;
+  place-items: center;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  font-weight: 800;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field span {
+  color: #cbd5f4;
+  font-size: 13px;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  padding: 11px 12px;
+}
+
+.checkbox-field {
+  align-content: end;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+.checkbox-field input {
+  width: auto;
+}
+
+.span-2 { grid-column: span 2; }
+
+.count-badge {
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.rule-list {
+  display: grid;
+  gap: 10px;
+}
+
+.rule-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  padding: 14px;
+}
+
+.rule-pattern {
+  font-size: 15px;
+  font-weight: 800;
+  word-break: break-word;
+}
+
+.rule-meta {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.rule-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rule-actions button {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.rule-actions button.danger {
+  background: rgba(255,107,119,0.14);
+  border-color: rgba(255,107,119,0.2);
+}
+
+.empty-state {
+  color: var(--muted);
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px dashed rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.03);
+}
+
+.message {
+  margin: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.8;
+  border: 1px solid transparent;
+}
+.message.info {
+  background: rgba(0, 207, 255, 0.1);
+  border-color: rgba(0, 207, 255, 0.18);
+  color: #b4eeff;
+}
+.message.success {
+  background: rgba(15, 211, 138, 0.12);
+  border-color: rgba(15, 211, 138, 0.2);
+  color: #a7f3d1;
+}
+.message.warning {
+  background: rgba(255, 179, 71, 0.12);
+  border-color: rgba(255, 179, 71, 0.2);
+  color: #ffdba9;
+}
+.message.error {
+  background: rgba(255, 107, 119, 0.12);
+  border-color: rgba(255, 107, 119, 0.18);
+  color: #ffc7cd;
+}
+
+@media (max-width: 760px) {
+  body { padding: 14px; }
+  .hero,
+  .section-row,
+  .quick-actions,
+  .form-actions { flex-direction: column; align-items: stretch; }
+  .setting-grid,
+  .form-grid { grid-template-columns: 1fr; }
+  .span-2 { grid-column: span 1; }
+  .rule-row { grid-template-columns: 1fr; }
+}

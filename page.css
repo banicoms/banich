@@ -1,0 +1,107 @@
+@font-face {
+  font-family: 'Banich Vazirmatn';
+  src: url('assets/fonts/Vazirmatn[wght].woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+html[data-banich='on'] {
+  --banich-font-family: 'Banich Vazirmatn', Vazirmatn, Tahoma, 'Segoe UI', Arial, sans-serif;
+}
+
+html[data-banich-font='on'] body,
+html[data-banich-font='on'] button,
+html[data-banich-font='on'] input[type='text'],
+html[data-banich-font='on'] input[type='search'],
+html[data-banich-font='on'] textarea,
+html[data-banich-font='on'] select,
+html[data-banich-font='on'] p,
+html[data-banich-font='on'] h1,
+html[data-banich-font='on'] h2,
+html[data-banich-font='on'] h3,
+html[data-banich-font='on'] h4,
+html[data-banich-font='on'] h5,
+html[data-banich-font='on'] h6,
+html[data-banich-font='on'] li,
+html[data-banich-font='on'] dt,
+html[data-banich-font='on'] dd,
+html[data-banich-font='on'] blockquote,
+html[data-banich-font='on'] td,
+html[data-banich-font='on'] th,
+html[data-banich-font='on'] caption,
+html[data-banich-font='on'] label,
+html[data-banich-font='on'] legend,
+html[data-banich-font='on'] figcaption,
+html[data-banich-font='on'] summary,
+html[data-banich-font='on'] a,
+html[data-banich-font='on'] small,
+html[data-banich-font='on'] strong,
+html[data-banich-font='on'] em,
+html[data-banich-font='on'] mark,
+html[data-banich-font='on'] q,
+html[data-banich-font='on'] cite,
+html[data-banich-font='on'] time {
+  font-family: var(--banich-font-family) !important;
+}
+
+html[data-banich-rtl='on'] p,
+html[data-banich-rtl='on'] h1,
+html[data-banich-rtl='on'] h2,
+html[data-banich-rtl='on'] h3,
+html[data-banich-rtl='on'] h4,
+html[data-banich-rtl='on'] h5,
+html[data-banich-rtl='on'] h6,
+html[data-banich-rtl='on'] li,
+html[data-banich-rtl='on'] dt,
+html[data-banich-rtl='on'] dd,
+html[data-banich-rtl='on'] blockquote,
+html[data-banich-rtl='on'] td,
+html[data-banich-rtl='on'] th,
+html[data-banich-rtl='on'] caption,
+html[data-banich-rtl='on'] label,
+html[data-banich-rtl='on'] legend,
+html[data-banich-rtl='on'] figcaption,
+html[data-banich-rtl='on'] summary,
+html[data-banich-rtl='on'] a,
+html[data-banich-rtl='on'] input[type='text'],
+html[data-banich-rtl='on'] input[type='search'],
+html[data-banich-rtl='on'] textarea {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: plaintext;
+}
+
+html[data-banich='on'] code,
+html[data-banich='on'] pre,
+html[data-banich='on'] kbd,
+html[data-banich='on'] samp,
+html[data-banich='on'] var,
+html[data-banich='on'] input[type='email'],
+html[data-banich='on'] input[type='url'],
+html[data-banich='on'] input[type='tel'],
+html[data-banich='on'] input[type='password'],
+html[data-banich='on'] [contenteditable='true'],
+html[data-banich='on'] textarea[data-banich-ignore],
+html[data-banich='on'] input[data-banich-ignore],
+html[data-banich='on'] .monaco-editor,
+html[data-banich='on'] .CodeMirror,
+html[data-banich='on'] .ace_editor,
+html[data-banich='on'] [class*='code-block'],
+html[data-banich='on'] [class*='editor'],
+html[data-banich='on'] .fa,
+html[data-banich='on'] .fas,
+html[data-banich='on'] .far,
+html[data-banich='on'] .fab,
+html[data-banich='on'] .fal,
+html[data-banich='on'] .material-icons,
+html[data-banich='on'] [class*='icon'],
+html[data-banich='on'] [class^='icon-'],
+html[data-banich='on'] svg,
+html[data-banich='on'] svg *,
+html[data-banich='on'] canvas {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: normal !important;
+  font-family: inherit !important;
+}
