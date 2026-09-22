@@ -137,34 +137,39 @@
       overflow: hidden;
     }
 
-    /* ─── TOGGLE ─────────────────────────────────────── */
-    .toggle-area {
-      padding: 14px 16px;
+    /* ─── TOGGLE ROW ─────────────────────────────────── */
+    .toggle-row {
+      padding: 12px 16px;
       display: flex; align-items: center; gap: 12px;
       cursor: pointer;
       transition: background .2s;
       user-select: none;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
     }
-    .toggle-area:hover { background: rgba(255,255,255,0.03); }
+    .toggle-row:last-of-type { border-bottom: none; }
+    .toggle-row:hover { background: rgba(255,255,255,0.03); }
 
     .toggle-icon {
-      font-size: 22px;
+      font-size: 20px;
       transition: transform .4s cubic-bezier(.34,1.56,.64,1);
       flex-shrink: 0;
+      width: 28px; text-align: center;
     }
-    .toggle-area.active .toggle-icon {
-      transform: translateY(-3px) scale(1.15);
+    .toggle-row.active .toggle-icon {
+      transform: translateY(-2px) scale(1.15);
       filter: drop-shadow(0 4px 8px rgba(124,106,255,0.6));
     }
 
-    .toggle-info { flex: 1; }
+    .toggle-info { flex: 1; min-width: 0; }
     .toggle-label {
-      font-size: 14px; font-weight: 700; color: var(--text);
+      font-size: 13px; font-weight: 700; color: var(--text);
       transition: color .3s;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .toggle-area.active .toggle-label { color: #a0c4ff; }
+    .toggle-row.active .toggle-label { color: #a0c4ff; }
     .toggle-desc {
-      font-size: 10px; color: var(--muted); margin-top: 2px; font-weight: 400;
+      font-size: 9.5px; color: var(--muted); margin-top: 2px; font-weight: 400;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
     /* iOS-style switch */
@@ -187,12 +192,12 @@
       transition: transform .3s cubic-bezier(.34,1.56,.64,1);
       box-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
-    .toggle-area.active .switch {
+    .toggle-row.active .switch {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       border-color: transparent;
       box-shadow: 0 0 16px rgba(124,106,255,0.4);
     }
-    .toggle-area.active .switch::after {
+    .toggle-row.active .switch::after {
       transform: translateX(-20px);
     }
 
@@ -234,6 +239,14 @@
       color: rgba(160,150,255,0.8);
     }
 
+    .rtl-tag {
+      font-size: 9.5px; font-weight: 600; letter-spacing: 0.5px;
+      padding: 2px 8px; border-radius: 6px;
+      background: rgba(0,201,255,0.12);
+      border: 1px solid rgba(0,201,255,0.2);
+      color: rgba(0,201,255,0.8);
+    }
+
     /* ─── DIVIDER ────────────────────────────────────── */
     .divider {
       height: 1px;
@@ -251,12 +264,8 @@
     .copy { font-size: 10px; color: #2a2a40; }
 
     /* ─── ROCKET ANIMATION IN POPUP ─────────────────── */
-    .rocket-wrap {
-      position: relative;
-    }
-    #rocketCanvas.launching {
-      animation: launch-wobble 0.5s ease;
-    }
+    .rocket-wrap { position: relative; }
+    #rocketCanvas.launching { animation: launch-wobble 0.5s ease; }
     @keyframes launch-wobble {
       0% { transform: rotate(-5deg); }
       50% { transform: rotate(5deg); }
@@ -292,20 +301,40 @@
   <!-- BODY -->
   <div class="body">
     <div class="glass-card">
-      <div class="toggle-area" id="toggleArea">
-        <div class="toggle-icon" id="toggleIcon">🚀</div>
+      <!-- Font Toggle -->
+      <div class="toggle-row" id="fontToggleRow">
+        <div class="toggle-icon" id="fontIcon">🔤</div>
         <div class="toggle-info">
-          <div class="toggle-label" id="toggleLabel">فعال‌سازی فارسی‌ساز</div>
-          <div class="toggle-desc">RTL + فونت وزیرمتن</div>
+          <div class="toggle-label" id="fontLabel">فونت وزیرمتن</div>
+          <div class="toggle-desc">اعمال فونت زیبای وزیرمتن روی متن‌ها</div>
         </div>
-        <div class="switch" id="switchEl"></div>
+        <div class="switch" id="fontSwitch"></div>
       </div>
+
+      <!-- RTL Toggle -->
+      <div class="toggle-row" id="rtlToggleRow">
+        <div class="toggle-icon" id="rtlIcon">↔️</div>
+        <div class="toggle-info">
+          <div class="toggle-label" id="rtlLabel">راست‌چین هوشمند</div>
+          <div class="toggle-desc">فقط متون فارسی/عربی/کردی/اردو راست‌چین می‌شوند</div>
+        </div>
+        <div class="switch" id="rtlSwitch"></div>
+      </div>
+
       <div class="status-row">
         <div class="pill">
-          <div class="dot" id="dot"></div>
-          <span class="status-text" id="statusText">غیرفعال</span>
+          <div class="dot" id="fontDot"></div>
+          <span class="status-text" id="fontStatusText">فونت: غیرفعال</span>
         </div>
         <div class="font-tag">Vazirmatn</div>
+      </div>
+
+      <div class="status-row" style="border-top: 1px solid rgba(255,255,255,0.03);">
+        <div class="pill">
+          <div class="dot" id="rtlDot"></div>
+          <span class="status-text" id="rtlStatusText">RTL: غیرفعال</span>
+        </div>
+        <div class="rtl-tag">Auto RTL</div>
       </div>
     </div>
   </div>
