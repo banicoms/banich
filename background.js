@@ -1,4 +1,4 @@
-// Background service worker - animates toolbar icon when RTL is active
+// Background service worker - animates toolbar icon when any Banich feature is active
 let animInterval = null;
 let frame = 0;
 
@@ -177,21 +177,51 @@ function stopAnimation() {
 
 // Listen for messages from popup
 chrome.runtime.onMessage.addListener((msg, sender) => {
-  if (msg.type === 'BANICH_ON') {
-    startAnimation(msg.tabId);
-  } else if (msg.type === 'BANICH_OFF') {
-    stopAnimation();
+  if (msg.type === 'BANICH_UPDATE') {
+    // Animate if ANY feature is active (font OR RTL)
+    if (msg.fontActive || msg.rtlActive) {
+      startAnimation(msg.tabId);
+    } else {
+      stopAnimation();
+    }
   }
 });
 
 // On tab switch, check state
 chrome.tabs.onActivated.addListener(async ({ tabId }) => {
   try {
-    const res = await chrome.storage.local.get(['banich_active_tab_' + tabId]);
-    if (res['banich_active_tab_' + tabId]) {
-      startAnimation(tabId);
+    // We need to check the actual page state since storage is per-origin
+    // For simplicity, we'll query the tab's URL and check storage
+    const tab = await chrome.tabs.get(tabId);
+    if (tab.url && tab.url.startsWith('http')) {
+      const url = new URL(tab.url);
+      const res = await chrome.storage.local.get(['banich_' + url.origin]);
+      const settings = res['banich_' + url.origin];
+      if (settings && (settings.font === true || settings.rtl === true)) {
+        startAnimation(tabId);
+      } else {
+        stopAnimation();
+      }
     } else {
       stopAnimation();
     }
-  } catch(e) {}
+  } catch(e) {
+    stopAnimation();
+  }
+});
+
+// Also handle tab updates (navigation)
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' && tab.url && tab.url.startsWith('http')) {
+    try {
+      const url = new URL(tab.url);
+      const res = await chrome.storage.local.get(['banich_' + url.origin]);
+      const settings = res['banich_' + url.origin];
+      // Only auto-start animation if this tab is currently active
+      const activeTabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (activeTabs[0]?.id === tabId && settings && (settings.font === true || settings.rtl === true)) {
+        startAnimation(tabId);
+      }
+    } catch(e) {}
+  }
 });
