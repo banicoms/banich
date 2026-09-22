@@ -1,17 +1,27 @@
 // ── Popup JS ────────────────────────────────────────────────────
-const toggleArea  = document.getElementById('toggleArea');
-const toggleLabel = document.getElementById('toggleLabel');
-const toggleIcon  = document.getElementById('toggleIcon');
-const dot         = document.getElementById('dot');
-const statusText  = document.getElementById('statusText');
-const adBanner    = document.getElementById('adBanner');
-const adClose     = document.getElementById('adClose');
-const rocketCanvas= document.getElementById('rocketCanvas');
-const ctx         = rocketCanvas.getContext('2d');
+const fontToggleRow = document.getElementById('fontToggleRow');
+const fontLabel     = document.getElementById('fontLabel');
+const fontIcon      = document.getElementById('fontIcon');
+const fontSwitch    = document.getElementById('fontSwitch');
+const fontDot       = document.getElementById('fontDot');
+const fontStatusText= document.getElementById('fontStatusText');
 
-let isActive = false;
+const rtlToggleRow  = document.getElementById('rtlToggleRow');
+const rtlLabel      = document.getElementById('rtlLabel');
+const rtlIcon       = document.getElementById('rtlIcon');
+const rtlSwitch     = document.getElementById('rtlSwitch');
+const rtlDot        = document.getElementById('rtlDot');
+const rtlStatusText = document.getElementById('rtlStatusText');
+
+const adBanner      = document.getElementById('adBanner');
+const adClose       = document.getElementById('adClose');
+const rocketCanvas  = document.getElementById('rocketCanvas');
+const ctx           = rocketCanvas.getContext('2d');
+
+let fontActive = false;
+let rtlActive  = false;
 let rocketFrame = 0;
-let rocketAnim = null;
+let rocketAnim  = null;
 const FRAMES = 20;
 
 // ── Rocket draw ─────────────────────────────────────────────────
@@ -205,24 +215,46 @@ function stopRocketAnim() {
   drawRocket(0, false);
 }
 
-// ── Update UI ────────────────────────────────────────────────────
-function updateUI(active) {
-  isActive = active;
+// ── Update UI for font toggle ────────────────────────────────────
+function updateFontUI(active) {
+  fontActive = active;
   if (active) {
-    toggleArea.classList.add('active');
-    toggleLabel.textContent = 'غیرفعال‌سازی فارسی‌ساز';
-    dot.classList.add('on');
-    statusText.classList.add('on');
-    statusText.textContent = 'فعال';
-    startRocketAnim();
+    fontToggleRow.classList.add('active');
+    fontLabel.textContent = 'غیرفعال‌سازی فونت وزیرمتن';
+    fontDot.classList.add('on');
+    fontStatusText.classList.add('on');
+    fontStatusText.textContent = 'فونت: فعال';
   } else {
-    toggleArea.classList.remove('active');
-    toggleLabel.textContent = 'فعال‌سازی فارسی‌ساز';
-    dot.classList.remove('on');
-    statusText.classList.remove('on');
-    statusText.textContent = 'غیرفعال';
-    stopRocketAnim();
+    fontToggleRow.classList.remove('active');
+    fontLabel.textContent = 'فونت وزیرمتن';
+    fontDot.classList.remove('on');
+    fontStatusText.classList.remove('on');
+    fontStatusText.textContent = 'فونت: غیرفعال';
   }
+}
+
+// ── Update UI for RTL toggle ─────────────────────────────────────
+function updateRTLUI(active) {
+  rtlActive = active;
+  if (active) {
+    rtlToggleRow.classList.add('active');
+    rtlLabel.textContent = 'غیرفعال‌سازی راست‌چین هوشمند';
+    rtlDot.classList.add('on');
+    rtlStatusText.classList.add('on');
+    rtlStatusText.textContent = 'RTL: فعال';
+  } else {
+    rtlToggleRow.classList.remove('active');
+    rtlLabel.textContent = 'راست‌چین هوشمند';
+    rtlDot.classList.remove('on');
+    rtlStatusText.classList.remove('on');
+    rtlStatusText.textContent = 'RTL: غیرفعال';
+  }
+}
+
+// Rocket anim runs when ANY feature is active
+function updateRocketAnim() {
+  if (fontActive || rtlActive) startRocketAnim();
+  else stopRocketAnim();
 }
 
 // ── Get tab ──────────────────────────────────────────────────────
@@ -237,81 +269,166 @@ async function checkState() {
     const tab = await getTab();
     const res = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
-      func: () => document.documentElement.getAttribute('data-banich') === '1'
+      func: () => ({
+        font: document.documentElement.getAttribute('data-banich-font') === '1',
+        rtl:  document.documentElement.getAttribute('data-banich-rtl') === '1'
+      })
     });
-    updateUI(res[0]?.result || false);
-  } catch { updateUI(false); }
+    const result = res[0]?.result || { font: false, rtl: false };
+    updateFontUI(result.font);
+    updateRTLUI(result.rtl);
+    updateRocketAnim();
+  } catch { 
+    updateFontUI(false); 
+    updateRTLUI(false); 
+    updateRocketAnim();
+  }
 }
 
-// ── Toggle ───────────────────────────────────────────────────────
-toggleArea.addEventListener('click', async () => {
+// ── Toggle Font ──────────────────────────────────────────────────
+fontToggleRow.addEventListener('click', async () => {
   try {
     const tab = await getTab();
     const res = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
-      func: () => {
-        const active = document.documentElement.getAttribute('data-banich') === '1';
-        const nowActive = !active;
-        const STYLE_ID = 'banich-rtl-style';
+      func: (nowActive) => {
+        const STYLE_ID = 'banich-font-style';
         let el = document.getElementById(STYLE_ID);
 
         if (nowActive) {
-          document.documentElement.setAttribute('data-banich', '1');
+          document.documentElement.setAttribute('data-banich-font', '1');
           if (!el) { el = document.createElement('style'); el.id = STYLE_ID; document.head.appendChild(el); }
           el.textContent = `
             @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap');
 
-            /* فونت وزیرمتن فقط برای متن‌ها */
+            /* فونت وزیرمتن فقط برای متن‌ها - نه آیکون‌ها */
             p, h1, h2, h3, h4, h5, h6, li, dt, dd, blockquote, td, th,
             label, legend, figcaption, cite, q, time,
             input, textarea, select, button,
-            .text, [class*="text-"], [class*="-text"],
-            [class*="content"], [class*="title"], [class*="desc"],
-            [class*="caption"], [class*="label"], [class*="body"] {
+            [class*="text"]:not([class*="icon"]):not([class*="fa-"]):not([class*="material"]),
+            [class*="content"]:not(svg):not(canvas),
+            [class*="title"], [class*="desc"], [class*="caption"],
+            [class*="label"], [class*="body"], [class*="paragraph"] {
               font-family: 'Vazirmatn', Tahoma, 'B Nazanin', sans-serif !important;
             }
+          `;
+        } else {
+          document.documentElement.removeAttribute('data-banich-font');
+          if (el) el.remove();
+        }
+        return nowActive;
+      },
+      args: [!fontActive]
+    });
 
-            /* جهت RTL فقط برای متن - نه آیکون‌ها یا SVG */
+    const nowActive = res[0]?.result;
+    updateFontUI(nowActive);
+    updateRocketAnim();
+
+    // Save state per origin
+    const url = new URL(tab.url);
+    const key = 'banich_' + url.origin;
+    chrome.storage.local.get([key], (stored) => {
+      const current = stored[key] || { font: false, rtl: false };
+      current.font = nowActive;
+      chrome.storage.local.set({ [key]: current });
+    });
+
+    // Notify background
+    chrome.runtime.sendMessage({
+      type: 'BANICH_UPDATE',
+      fontActive: nowActive,
+      rtlActive: rtlActive,
+      tabId: tab.id
+    });
+
+  } catch(e) { console.error('Banich font toggle error:', e); }
+});
+
+// ── Toggle RTL ───────────────────────────────────────────────────
+rtlToggleRow.addEventListener('click', async () => {
+  try {
+    const tab = await getTab();
+    const res = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: (nowActive) => {
+        const STYLE_ID = 'banich-rtl-style';
+        let el = document.getElementById(STYLE_ID);
+
+        if (nowActive) {
+          document.documentElement.setAttribute('data-banich-rtl', '1');
+          if (!el) { el = document.createElement('style'); el.id = STYLE_ID; document.head.appendChild(el); }
+          el.textContent = `
+            /* راست‌چین هوشمند: فقط برای متون RTL (فارسی، عربی، کردی، اردو، ...) */
+            /* از unicode-bidi: plaintext و dir=auto برای تشخیص خودکار زبان استفاده می‌کنیم */
+
+            /* المان‌های متنی رایج - جهت خودکار بر اساس محتوای زبان */
             p, h1, h2, h3, h4, h5, h6, li, dt, dd, blockquote,
-            td, th, label, legend, figcaption,
+            td, th, label, legend, figcaption, cite, q, time,
+            [class*="text"]:not([class*="icon"]):not([class*="fa-"]):not([class*="material"]):not(svg),
             [class*="content"]:not(svg):not(canvas),
-            [class*="text"]:not(svg):not([class*="icon"]):not([class*="fa-"]) {
+            [class*="title"], [class*="desc"], [class*="caption"],
+            [class*="label"], [class*="body"], [class*="paragraph"],
+            [class*="article"], [class*="post"], [class*="comment"] {
               direction: rtl !important;
               text-align: right !important;
-              unicode-bidi: plaintext;
+              unicode-bidi: plaintext !important;
             }
 
-            /* فیلدهای ورودی */
+            /* فیلدهای ورودی - همیشه راست‌چین برای زبان‌های RTL */
             input[type="text"], input[type="search"],
             input[type="email"], input[type="password"],
             input[type="url"], input[type="tel"],
             textarea {
               direction: rtl !important;
               text-align: right !important;
+              unicode-bidi: plaintext !important;
+            }
+
+            /* placeholder هم راست‌چین */
+            input::placeholder, textarea::placeholder {
+              direction: rtl !important;
+              text-align: right !important;
+            }
+
+            /* جلوگیری از شکستن flex/grid لایه‌های چیدمان */
+            /* فقط متن‌ها تحت تأثیر قرار می‌گیرند، نه containerها */
+            [dir="rtl"] > *,
+            [dir="auto"] > * {
+              unicode-bidi: isolate;
             }
           `;
         } else {
-          document.documentElement.removeAttribute('data-banich');
+          document.documentElement.removeAttribute('data-banich-rtl');
           if (el) el.remove();
         }
         return nowActive;
-      }
+      },
+      args: [!rtlActive]
     });
 
     const nowActive = res[0]?.result;
-    updateUI(nowActive);
+    updateRTLUI(nowActive);
+    updateRocketAnim();
 
-    // Save state
+    // Save state per origin
     const url = new URL(tab.url);
-    chrome.storage.local.set({ ['banich_' + url.origin]: nowActive });
+    const key = 'banich_' + url.origin;
+    chrome.storage.local.get([key], (stored) => {
+      const current = stored[key] || { font: false, rtl: false };
+      current.rtl = nowActive;
+      chrome.storage.local.set({ [key]: current });
+    });
 
-    // Notify background for toolbar animation
+    // Notify background
     chrome.runtime.sendMessage({
-      type: nowActive ? 'BANICH_ON' : 'BANICH_OFF',
+      type: 'BANICH_UPDATE',
+      fontActive: fontActive,
+      rtlActive: nowActive,
       tabId: tab.id
     });
 
-  } catch(e) { console.error('Banich toggle error:', e); }
+  } catch(e) { console.error('Banich RTL toggle error:', e); }
 });
 
 // ── AD: show only first time ──────────────────────────────────────
