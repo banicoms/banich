@@ -1,351 +1,263 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="fa">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Banich</title>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Harmattan:wght@400;700&family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin:0; padding:0; box-sizing:border-box; }
 
+    /* ===== THEME TOKENS ===== */
     :root {
-      --glass-bg: rgba(255,255,255,0.04);
-      --glass-border: rgba(255,255,255,0.10);
-      --glass-shadow: 0 8px 32px rgba(0,0,0,0.5);
-      --accent: #7C6AFF;
-      --accent2: #00C9FF;
-      --gold: #D4AF37;
-      --red: #FF4560;
-      --green: #00E676;
-      --bg: #080c14;
-      --text: #e8eaf6;
-      --muted: #4a5068;
+      --bg:#e5ebf1; --fg:#3a4352; --muted:#79859a;
+      --accent:#6b79e4; --accent-h:#5a67d8; --accent-l:#8b9cff;
+      --ok:#10b981; --ok-h:#059669;
+      --card:#e5ebf1; --border:#dbe2e9;
+      --shadow:10px 10px 20px #c6ced7, -10px -10px 20px #ffffff;
+      --shadow-inset:inset 7px 7px 14px #c6ced7, inset -7px -7px 14px #ffffff;
+      --shadow-btn:4px 4px 10px #c6ced7, -4px -4px 10px #ffffff;
+      --shadow-btn-inset:inset 4px 4px 8px #c6ced7, inset -4px -4px 8px #ffffff;
+      --r:20px; --r-sm:12px;
+      --trans:all .25s cubic-bezier(.4,0,.2,1);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:#0f172a; --fg:#f1f5f9; --muted:#94a3b8;
+        --accent:#818cf8; --accent-h:#6366f1; --accent-l:#a5b4fc;
+        --ok:#34d399; --ok-h:#10b981;
+        --card:#1e293b; --border:#334155;
+        --shadow:8px 8px 16px #0a0f1a, -8px -8px 16px #161f33;
+        --shadow-inset:inset 5px 5px 10px #0a0f1a, inset -5px -5px 10px #161f33;
+        --shadow-btn:4px 4px 8px #0a0f1a, -4px -4px 8px #161f33;
+        --shadow-btn-inset:inset 4px 4px 8px #0a0f1a, inset -4px -4px 8px #161f33;
+      }
     }
 
-    html, body {
-      width: 310px;
-      background: transparent;
-      font-family: 'Vazirmatn', Tahoma, sans-serif;
-      direction: rtl;
-      overflow: hidden;
+    [data-theme="glass"] {
+      --bg:#0f172a; --fg:#f8fafc; --muted:#94a3b8;
+      --accent:#60a5fa; --accent-h:#3b82f6; --accent-l:#93c5fd;
+      --ok:#34d399; --ok-h:#10b981;
+      --card:rgba(255,255,255,.06); --border:rgba(255,255,255,.12);
+      --shadow:0 16px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06);
+      --shadow-inset:inset 2px 2px 6px rgba(0,0,0,.35), inset -2px -2px 6px rgba(255,255,255,.06);
+      --shadow-btn:0 6px 16px rgba(0,0,0,.3), 0 0 0 1px rgba(255,255,255,.05);
+      --shadow-btn-inset:inset 2px 2px 6px rgba(0,0,0,.3), inset -2px -2px 6px rgba(255,255,255,.05);
+      --r:22px;
     }
 
-    /* ─── OUTER WRAPPER ──────────────────────────────── */
-    .shell {
-      width: 310px;
+    [data-theme="clay"] {
+      --bg:#f1f5f9; --fg:#1e293b; --muted:#64748b;
+      --accent:#f97316; --accent-h:#ea580c; --accent-l:#fb923c;
+      --ok:#22c55e; --ok-h:#16a34a;
+      --card:#f1f5f9; --border:#e2e8f0;
+      --shadow:8px 8px 16px #cbd5e1, -8px -8px 16px #ffffff;
+      --shadow-inset:inset 6px 6px 12px #cbd5e1, inset -6px -6px 12px #ffffff;
+      --shadow-btn:4px 4px 10px #cbd5e1, -4px -4px 10px #ffffff;
+      --shadow-btn-inset:inset 4px 4px 8px #cbd5e1, inset -4px -4px 8px #ffffff;
+      --r:24px;
+    }
+
+    [data-theme="liquid"] {
+      --bg:#e0f2fe; --fg:#0c4a6e; --muted:#0369a1;
+      --accent:#0ea5e9; --accent-h:#0284c7; --accent-l:#38bdf8;
+      --ok:#14b8a6; --ok-h:#0d9488;
+      --card:rgba(255,255,255,.75); --border:rgba(255,255,255,.5);
+      --shadow:0 12px 32px rgba(14,116,144,.18), 0 0 0 1px rgba(255,255,255,.45);
+      --shadow-inset:inset 2px 2px 6px rgba(14,116,144,.12), inset -2px -2px 6px rgba(255,255,255,.6);
+      --shadow-btn:0 6px 16px rgba(14,116,144,.15), 0 0 0 1px rgba(255,255,255,.4);
+      --shadow-btn-inset:inset 2px 2px 6px rgba(14,116,144,.1), inset -2px -2px 6px rgba(255,255,255,.5);
+      --r:26px;
+    }
+
+    /* ===== BASE =====
+       Chrome popup windows are always rectangular (Chromium issue still open),
+       so html/body fill the WHOLE window with the theme color - no clipped corners.
+       Firefox supports transparent popups: body gets the radius there. */
+    html,body {
+      width:280px; background:var(--bg);
+      font-family:'Vazirmatn',Tahoma,sans-serif; direction:rtl; color:var(--fg);
+      overflow:hidden;
+    }
+    @-moz-document url-prefix() {
+      html { background:transparent; }
+      body { background:var(--bg); border-radius:var(--r); }
+    }
+    .wrap {
+      width:280px; background:var(--bg); border-radius:var(--r);
+      padding:16px; border:1px solid var(--border);
+      transition:background .3s;
+      overflow:hidden; position:relative;
+    }
+
+    [data-theme="glass"] .wrap {
       background:
-        radial-gradient(ellipse at 10% 0%, rgba(124,106,255,0.12) 0%, transparent 55%),
-        radial-gradient(ellipse at 90% 100%, rgba(0,201,255,0.08) 0%, transparent 55%),
-        linear-gradient(160deg, #0d1120 0%, #080c14 60%, #0a0d1a 100%);
-      overflow: hidden;
-      border-radius: 0;
+        radial-gradient(ellipse at 20% 0%, rgba(96,165,250,.12), transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(14,165,233,.1), transparent 50%),
+        linear-gradient(135deg,#0f172a,#1e293b);
+      backdrop-filter:blur(24px);
+    }
+    [data-theme="liquid"] .wrap {
+      background:
+        radial-gradient(ellipse at 15% 10%, rgba(14,165,233,.16), transparent 45%),
+        radial-gradient(ellipse at 85% 90%, rgba(20,184,166,.12), transparent 45%),
+        linear-gradient(135deg,#e0f2fe,#bae6fd);
+      backdrop-filter:blur(24px);
+    }
+    [data-theme="clay"] .wrap { background:var(--bg); }
+
+    /* ===== HEADER: LOGO+VERSION (RIGHT) | TITLE (CENTER) | THEME BTN (LEFT CORNER) ===== */
+    .header { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+
+    /* Logo column - RIGHT side, no border */
+    .logo-col { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
+    .logo-wrap {
+      width:52px; height:52px; flex-shrink:0; border-radius:14px;
+      background:var(--card); box-shadow:var(--shadow-btn-inset);
+      display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden;
+    }
+    .logo-wrap canvas { width:52px; height:52px; display:block; border-radius:12px; }
+
+    /* Version text - visible, right under the logo */
+    .version-badge {
+      display:block; margin-top:5px;
+      font-size:9px; font-weight:800; color:var(--accent); letter-spacing:.4px;
+      direction:ltr;
     }
 
-    /* ─── AD BANNER ──────────────────────────────────── */
-    #adBanner {
-      display: none;
-      background: linear-gradient(135deg, rgba(0,255,150,0.06), rgba(0,150,80,0.03));
-      border-bottom: 1px solid rgba(0,230,118,0.15);
-      padding: 10px 14px 10px 36px;
-      position: relative;
-    }
-    #adBanner.show { display: block; }
+    /* Title - RIGHT side, next to the logo */
+    .title-container { flex:1; text-align:right; min-width:0; }
+    .title-container h1 { margin:0; font-size:20px; font-weight:400; font-family:'Black Ops One','Vazirmatn',sans-serif; letter-spacing:.5px; color:var(--accent); line-height:1; }
+    .title-container p { margin:6px 0 0; font-size:13px; font-family:'Harmattan','Vazirmatn',Tahoma,sans-serif; color:var(--muted); font-weight:400; white-space:nowrap; }
 
-    .ad-x {
-      position: absolute;
-      top: 8px; left: 10px;
-      width: 20px; height: 20px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 50%;
-      color: #666;
-      font-size: 10px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: all .2s;
-      flex-shrink: 0;
+    /* Theme Button - absolute, small, fully in the top-left corner */
+    .theme-btn {
+      position:absolute; top:10px; left:10px; z-index:10;
+      width:32px; height:32px; border-radius:9px;
+      background:var(--card); box-shadow:var(--shadow-btn);
+      border:1px solid var(--border); cursor:pointer; transition:var(--trans);
+      display:flex; align-items:center; justify-content:center;
     }
-    .ad-x:hover { background: rgba(255,255,255,0.12); color: #ccc; }
+    .theme-btn:hover { transform:translateY(-1px); border-color:var(--accent); }
+    .theme-btn:active { box-shadow:var(--shadow-btn-inset); transform:scale(.96); }
+    .theme-btn svg { width:14px; height:14px; color:var(--accent); }
 
-    .ad-tag {
-      font-size: 9px; letter-spacing: 1.5px; color: rgba(0,230,118,0.55);
-      text-transform: uppercase; margin-bottom: 4px;
-    }
-    .ad-title {
-      font-size: 12px; font-weight: 700; color: #d0f0e0; margin-bottom: 3px;
-    }
-    .ad-body {
-      font-size: 10.5px; color: #5a7a6a; margin-bottom: 8px; line-height: 1.6;
-    }
-    .ad-cta {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: linear-gradient(90deg, #00b864, #009950);
-      color: #fff;
-      font-family: 'Vazirmatn', Tahoma, sans-serif;
-      font-size: 11px; font-weight: 700;
-      padding: 5px 13px; border-radius: 8px;
-      text-decoration: none; transition: opacity .2s;
-    }
-    .ad-cta:hover { opacity: 0.85; }
-
-    /* ─── HEADER ─────────────────────────────────────── */
-    .header {
-      padding: 14px 16px 12px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 1px solid var(--glass-border);
-      position: relative;
-    }
-    .header::after {
-      content: '';
-      position: absolute; bottom: -1px; right: 16px;
-      width: 60px; height: 1px;
-      background: linear-gradient(90deg, var(--accent), transparent);
+    /* ===== TOGGLES CONTAINER ===== */
+    .toggles-container {
+      background:var(--card);
+      border-radius:var(--r);
+      padding:16px;
+      box-shadow:var(--shadow-inset);
+      border:1px solid var(--border);
+      margin-bottom:20px;
     }
 
-    /* Rocket canvas in popup */
-    #rocketCanvas {
-      width: 44px; height: 44px;
-      flex-shrink: 0;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .htext {}
-    .app-name {
-      font-size: 22px; font-weight: 900; letter-spacing: 2px;
-      text-transform: uppercase; line-height: 1;
-      background: linear-gradient(135deg, #fff 0%, #a0a8ff 50%, #7C6AFF 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .app-sub {
-      font-size: 10px; color: var(--muted); margin-top: 3px; font-weight: 400;
-    }
-
-    /* ─── BODY ───────────────────────────────────────── */
-    .body { padding: 14px 14px 10px; display: flex; flex-direction: column; gap: 10px; }
-
-    /* ─── GLASS CARD ─────────────────────────────────── */
-    .glass-card {
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      border-radius: 14px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      overflow: hidden;
-    }
-
-    /* ─── TOGGLE ROW ─────────────────────────────────── */
     .toggle-row {
-      padding: 12px 16px;
-      display: flex; align-items: center; gap: 12px;
-      cursor: pointer;
-      transition: background .2s;
-      user-select: none;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 8px; gap:12px;
+      border-bottom:1px solid var(--border);
     }
-    .toggle-row:last-of-type { border-bottom: none; }
-    .toggle-row:hover { background: rgba(255,255,255,0.03); }
+    .toggle-row:last-child { border-bottom:none; }
 
-    .toggle-icon {
-      font-size: 20px;
-      transition: transform .4s cubic-bezier(.34,1.56,.64,1);
-      flex-shrink: 0;
-      width: 28px; text-align: center;
-    }
-    .toggle-row.active .toggle-icon {
-      transform: translateY(-2px) scale(1.15);
-      filter: drop-shadow(0 4px 8px rgba(124,106,255,0.6));
-    }
-
-    .toggle-info { flex: 1; min-width: 0; }
+    /* Label: single column, title line + subtitle stacked */
     .toggle-label {
-      font-size: 13px; font-weight: 700; color: var(--text);
-      transition: color .3s;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      display:flex; flex-direction:column; align-items:flex-start; gap:3px;
+      min-width:0; cursor:pointer;
     }
-    .toggle-row.active .toggle-label { color: #a0c4ff; }
-    .toggle-desc {
-      font-size: 9.5px; color: var(--muted); margin-top: 2px; font-weight: 400;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
+    .label-line { display:flex; align-items:center; gap:7px; }
+    .toggle-label .label-main { font-size:10px; font-weight:600; color:var(--fg); }
+    .toggle-label .label-sub { font-size:8px; font-weight:400; color:var(--muted); }
 
-    /* iOS-style switch */
-    .switch {
-      width: 44px; height: 24px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      position: relative;
-      transition: all .3s ease;
-      flex-shrink: 0;
-    }
-    .switch::after {
-      content: '';
-      position: absolute;
-      top: 3px; right: 3px;
-      width: 16px; height: 16px;
-      background: #fff;
-      border-radius: 50%;
-      transition: transform .3s cubic-bezier(.34,1.56,.64,1);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-    }
-    .toggle-row.active .switch {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-color: transparent;
-      box-shadow: 0 0 16px rgba(124,106,255,0.4);
-    }
-    .toggle-row.active .switch::after {
-      transform: translateX(-20px);
-    }
+    .dot { width:8px; height:8px; border-radius:50%; background:var(--muted); flex-shrink:0; transition:var(--trans); }
+    .dot.on { background:var(--ok); box-shadow:0 0 10px var(--ok); animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 6px var(--ok);} 50%{box-shadow:0 0 14px var(--ok);} }
 
-    /* ─── STATUS ROW ─────────────────────────────────── */
-    .status-row {
-      padding: 10px 16px;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      display: flex; align-items: center; justify-content: space-between;
+    .switch { position:relative; display:inline-block; width:52px; height:28px; flex-shrink:0; }
+    .switch input { opacity:0; width:0; height:0; }
+    .slider {
+      position:absolute; cursor:pointer; inset:0;
+      background:var(--card); border-radius:28px;
+      box-shadow:var(--shadow-btn-inset);
+      border:1px solid var(--border); transition:var(--trans);
     }
+    .slider:before {
+      content:""; position:absolute; height:22px; width:22px; left:3px; top:50%; transform:translateY(-50%);
+      background:var(--card); border-radius:50%;
+      box-shadow:2px 2px 5px var(--muted), -2px -2px 5px #ffffff;
+      transition:var(--trans);
+    }
+    .switch input:checked + .slider:before { transform:translateX(24px) translateY(-50%); }
+    .switch input:checked + .slider { border-color:var(--accent); box-shadow:var(--shadow-btn-inset), 0 0 0 2px var(--accent); }
 
-    .pill {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 11px; color: var(--muted);
-    }
-    .dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: #2a2a3a;
-      transition: all .3s;
-      flex-shrink: 0;
-    }
-    .dot.on {
-      background: var(--green);
-      box-shadow: 0 0 7px rgba(0,230,118,0.7);
-      animation: pulse-dot 2s infinite;
-    }
-    @keyframes pulse-dot {
-      0%,100% { box-shadow: 0 0 7px rgba(0,230,118,0.7); }
-      50% { box-shadow: 0 0 14px rgba(0,230,118,1); }
-    }
-
-    .status-text { transition: color .3s; }
-    .status-text.on { color: var(--green); }
-
-    .font-tag {
-      font-size: 9.5px; font-weight: 600; letter-spacing: 0.5px;
-      padding: 2px 8px; border-radius: 6px;
-      background: rgba(124,106,255,0.12);
-      border: 1px solid rgba(124,106,255,0.2);
-      color: rgba(160,150,255,0.8);
-    }
-
-    .rtl-tag {
-      font-size: 9.5px; font-weight: 600; letter-spacing: 0.5px;
-      padding: 2px 8px; border-radius: 6px;
-      background: rgba(0,201,255,0.12);
-      border: 1px solid rgba(0,201,255,0.2);
-      color: rgba(0,201,255,0.8);
-    }
-
-    /* ─── DIVIDER ────────────────────────────────────── */
-    .divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
-      margin: 0 14px;
-    }
-
-    /* ─── FOOTER ─────────────────────────────────────── */
-    .footer {
-      padding: 10px 16px 14px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .credit { font-size: 10px; color: var(--muted); }
-    .credit span { color: rgba(160,150,255,0.7); font-weight: 600; }
-    .copy { font-size: 10px; color: #2a2a40; }
-
-    /* ─── ROCKET ANIMATION IN POPUP ─────────────────── */
-    .rocket-wrap { position: relative; }
-    #rocketCanvas.launching { animation: launch-wobble 0.5s ease; }
-    @keyframes launch-wobble {
-      0% { transform: rotate(-5deg); }
-      50% { transform: rotate(5deg); }
-      100% { transform: rotate(0); }
-    }
+    /* ===== FOOTER ===== */
+    .footer { display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--muted); margin-top:auto; padding-top:8px; }
+    .author span { color:var(--accent); font-weight:700; }
+    .copyright { direction:ltr; opacity:.7; }
   </style>
 </head>
 <body>
-<div class="shell">
+<div class="wrap">
 
-  <!-- AD -->
-  <div id="adBanner">
-    <button class="ad-x" id="adClose">✕</button>
-    <div class="ad-tag">تبلیغ</div>
-    <div class="ad-title">🛡️ فیلترشکن ملی Banicom VPN</div>
-    <div class="ad-body">پلن‌های متنوع · قیمت مناسب · سرعت بالا · پایداری عالی</div>
-    <a class="ad-cta" href="https://t.me/BanicomVPN" target="_blank">
-      ✈️ کانال تلگرام
-    </a>
-  </div>
+  <header class="header">
+    <!-- Theme Button: small, fully in the top-left corner -->
+    <button class="theme-btn" id="themeBtn" aria-label="تغییر تم">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.5-.7 1.2-1.6-.2-.5-.3-1-.3-1.5 0-1.7 1.3-3 3-3h1.1c3.1 0 5-2.6 5-5.7C22 6.5 17.5 2 12 2z"/>
+      </svg>
+    </button>
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="rocket-wrap">
-      <canvas id="rocketCanvas" width="44" height="44"></canvas>
+    <!-- RIGHT: Logo + version -->
+    <div class="logo-col">
+      <div class="logo-wrap">
+        <canvas id="rocketCanvas" width="52" height="52"></canvas>
+      </div>
+      <span class="version-badge" id="versionBadge">v5.6</span>
     </div>
-    <div class="htext">
-      <div class="app-name">Banich</div>
-      <div class="app-sub">بانیچ، دستیار فارسی‌خوان کروم</div>
+
+    <!-- CENTER: Title -->
+    <div class="title-container">
+      <h1>BANICH</h1>
+      <p>بانیچ، دستیار فارسی‌خوان کروم</p>
     </div>
-  </div>
+  </header>
 
-  <!-- BODY -->
-  <div class="body">
-    <div class="glass-card">
-      <!-- Font Toggle -->
-      <div class="toggle-row" id="fontToggleRow">
-        <div class="toggle-icon" id="fontIcon">🔤</div>
-        <div class="toggle-info">
-          <div class="toggle-label" id="fontLabel">فونت وزیرمتن</div>
-          <div class="toggle-desc">اعمال فونت زیبای وزیرمتن روی متن‌ها</div>
-        </div>
-        <div class="switch" id="fontSwitch"></div>
-      </div>
-
-      <!-- RTL Toggle -->
-      <div class="toggle-row" id="rtlToggleRow">
-        <div class="toggle-icon" id="rtlIcon">↔️</div>
-        <div class="toggle-info">
-          <div class="toggle-label" id="rtlLabel">راست‌چین هوشمند</div>
-          <div class="toggle-desc">فقط متون فارسی/عربی/کردی/اردو راست‌چین می‌شوند</div>
-        </div>
-        <div class="switch" id="rtlSwitch"></div>
-      </div>
-
-      <div class="status-row">
-        <div class="pill">
-          <div class="dot" id="fontDot"></div>
-          <span class="status-text" id="fontStatusText">فونت: غیرفعال</span>
-        </div>
-        <div class="font-tag">Vazirmatn</div>
-      </div>
-
-      <div class="status-row" style="border-top: 1px solid rgba(255,255,255,0.03);">
-        <div class="pill">
-          <div class="dot" id="rtlDot"></div>
-          <span class="status-text" id="rtlStatusText">RTL: غیرفعال</span>
-        </div>
-        <div class="rtl-tag">Auto RTL</div>
-      </div>
+  <section class="toggles-container">
+    <div class="toggle-row" id="fontRow">
+      <label class="toggle-label" for="fontSwitch">
+        <span class="label-line">
+          <span class="dot" id="fontDot"></span>
+          <span class="label-main" id="fontMain">فونت وزیرمتن</span>
+        </span>
+        <span class="label-sub">اعمال فونت زیبا روی متن‌ها</span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="fontSwitch">
+        <span class="slider"></span>
+      </label>
     </div>
-  </div>
 
-  <div class="divider"></div>
+    <div class="toggle-row" id="rtlRow">
+      <label class="toggle-label" for="rtlSwitch">
+        <span class="label-line">
+          <span class="dot" id="rtlDot"></span>
+          <span class="label-main" id="rtlMain">راست‌چین هوشمند</span>
+        </span>
+        <span class="label-sub">فقط فارسی/عربی/کردی/اردو</span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="rtlSwitch">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </section>
 
-  <!-- FOOTER -->
-  <div class="footer">
-    <div class="credit">برنامه‌نویس: <span>شوان</span></div>
-    <div class="copy">© 2026 Banich</div>
-  </div>
+  <footer class="footer">
+    <div class="author">برنامه‌نویس: <span>شوان</span></div>
+    <div class="copyright">Banich 2026 ©</div>
+  </footer>
 
 </div>
 <script src="popup.js"></script>
