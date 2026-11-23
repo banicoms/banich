@@ -267,10 +267,15 @@ function stopAnimation() {
   chrome.action.setIcon({ imageData }).catch(()=>{});
 }
 
-chrome.runtime.onMessage.addListener((msg) => {
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === 'BANICH_ORIGIN' && sender.tab?.url) {
+    try { sendResponse({ origin: new URL(sender.tab.url).origin }); } catch (e) {}
+    return;
+  }
   if (msg.type === 'BANICH_UPDATE') {
     if (msg.fontActive || msg.rtlActive) animateIcon(msg.tabId);
     else stopAnimation();
+    sendResponse({ ok: true });
   }
 });
 
@@ -294,8 +299,9 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       const res = await chrome.storage.local.get(['banich_' + url.origin]);
       const settings = res['banich_' + url.origin];
       const activeTabs = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (activeTabs[0]?.id === tabId && settings && (settings.font === true || settings.rtl === true)) {
-        animateIcon(tabId);
+      if (activeTabs[0]?.id === tabId) {
+        if (settings && (settings.font === true || settings.rtl === true)) animateIcon(tabId);
+        else stopAnimation();
       }
     } catch(e) {}
   }
