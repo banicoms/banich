@@ -1,0 +1,28 @@
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('Vazirmatn.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Black Ops One';
+  src: url('BlackOpsOne.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Harmattan';
+  src: url('Harmattan-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Harmattan';
+  src: url('Harmattan-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}

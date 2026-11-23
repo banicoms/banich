@@ -1,4 +1,5 @@
 // ── Popup JS ────────────────────────────────────────────────────
+const extensionApi = typeof browser !== 'undefined' ? browser : chrome;
 const fontRow = document.getElementById('fontRow');
 const fontSwitch = document.getElementById('fontSwitch');
 const fontDot = document.getElementById('fontDot');
@@ -20,7 +21,7 @@ let frame = 0, anim = null;
 const FRAMES = 30, S = 52;
 
 // ── Version ────────────────────────────────────────────────────
-const VERSION = '5.6';
+const VERSION = '6.0';
 versionBadge.textContent = 'v' + VERSION;
 
 // ── Theme system ───────────────────────────────────────────────
@@ -38,9 +39,9 @@ function applyTheme(id) {
   document.documentElement.dataset.theme = t.id === 'neo' ? '' : t.id;
   drawLogo(frame, fActive || rActive);
 }
-function saveTheme(id) { try { chrome.storage.local.set({ banich_theme: id }); } catch {} }
+function saveTheme(id) { try { extensionApi.storage.local.set({ banich_theme: id }); } catch {} }
 function loadTheme() {
-  try { chrome.storage.local.get(['banich_theme'], r => applyTheme(r.banich_theme || 'neo')); }
+  try { extensionApi.storage.local.get(['banich_theme'], r => applyTheme(r.banich_theme || 'neo')); }
   catch { applyTheme('neo'); }
 }
 function nextTheme() {
@@ -276,61 +277,70 @@ function updR(on) {
 }
 
 // ── Tab & State ────────────────────────────────────────────────
-async function getTab() { const [t] = await chrome.tabs.query({ active: true, currentWindow: true }); return t; }
+async function getTab() { const [t] = await extensionApi.tabs.query({ active: true, currentWindow: true }); return t; }
 async function check() {
   try {
     const t = await getTab();
-    const r = await chrome.scripting.executeScript({ target: { tabId: t.id }, func: () => ({ font: document.documentElement.getAttribute('data-banich-font')==='1', rtl: document.documentElement.getAttribute('data-banich-rtl')==='1' }) });
-    const o = r[0]?.result || { font:false, rtl:false };
-    updF(o.font); updR(o.rtl); updAnim();
+    const url = new URL(t.url);
+    if (!['http:', 'https:', 'file:'].includes(url.protocol)) throw new Error('Unsupported page');
+    const key = 'banich_' + url.origin;
+    const saved = await extensionApi.storage.local.get([key]);
+    const o = saved[key] || { font:false, rtl:false };
+    updF(o.font === true); updR(o.rtl === true); updAnim();
   } catch { updF(false); updR(false); updAnim(); }
 }
 
 // ── Toggle Handler ─────────────────────────────────────────────
+let saving = false;
 function handler(type) { return async () => {
+  if (saving) { updF(fActive); updR(rActive); return; }
+  saving = true;
   try {
     const t = await getTab();
     const isF = type==='font', cur = isF ? fActive : rActive;
-    const r = await chrome.scripting.executeScript({
-      target: { tabId: t.id },
-      func: (on, tp) => {
-        const id = tp==='font' ? 'banich-font-style' : 'banich-rtl-style';
-        const attr = tp==='font' ? 'data-banich-font' : 'data-banich-rtl';
-        let el = document.getElementById(id);
-        if (on) {
-          document.documentElement.setAttribute(attr, '1');
-          if (!el) { el = document.createElement('style'); el.id = id; document.head.appendChild(el); }
-          el.textContent = tp==='font' ? `
-            @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap');
-            p,h1,h2,h3,h4,h5,h6,li,dt,dd,blockquote,td,th,label,legend,figcaption,cite,q,time,input,textarea,select,button,[class*="text"]:not([class*="icon"]):not([class*="fa-"]):not([class*="material"]),[class*="content"]:not(svg):not(canvas),[class*="title"],[class*="desc"],[class*="caption"],[class*="label"],[class*="body"],[class*="paragraph"]{font-family:'Vazirmatn',Tahoma,'B Nazanin',sans-serif!important}
-          ` : `
-            p,h1,h2,h3,h4,h5,h6,li,dt,dd,blockquote,td,th,label,legend,figcaption,cite,q,time,[class*="text"]:not([class*="icon"]):not([class*="fa-"]):not([class*="material"]):not(svg),[class*="content"]:not(svg):not(canvas),[class*="title"],[class*="desc"],[class*="caption"],[class*="label"],[class*="body"],[class*="paragraph"],[class*="article"],[class*="post"],[class*="comment"]{unicode-bidi:plaintext!important}
-            input[type="text"],input[type="search"],input[type="email"],input[type="password"],input[type="url"],input[type="tel"],textarea{unicode-bidi:plaintext!important}
-            input::placeholder,textarea::placeholder{unicode-bidi:plaintext!important}
-            [dir="rtl"] > *,[dir="auto"] > *{unicode-bidi:isolate}
-          `;
-        } else { document.documentElement.removeAttribute(attr); if (el) el.remove(); }
-        return on;
-      },
-      args: [!cur, type]
-    });
-    const on = r[0]?.result;
+    const url = new URL(t.url);
+    if (!['http:', 'https:', 'file:'].includes(url.protocol)) throw new Error('Unsupported page');
+    const k = 'banich_' + url.origin;
+    const saved = await extensionApi.storage.local.get([k]);
+    const o = saved[k] || {font:false, rtl:false};
+    const on = !cur;
+    o[type] = on;
+    // Inject into already-open tabs too; content script guard prevents duplicate listeners.
+    try {
+      await extensionApi.scripting.executeScript({ target: { tabId: t.id, allFrames: true }, files: ['content.js'] });
+    } catch (frameError) {
+      await extensionApi.scripting.executeScript({ target: { tabId: t.id }, files: ['content.js'] });
+    }
+    await extensionApi.tabs.sendMessage(t.id, { type: 'BANICH_APPLY', origin: url.origin, settings: o }, { frameId: 0 });
+    await extensionApi.storage.local.set({[k]:o});
+    // Other permitted frames receive same settings even if their origin lookup failed.
+    extensionApi.tabs.sendMessage(t.id, { type: 'BANICH_APPLY', origin: url.origin, settings: o }).catch(error => console.warn('Banich frames:', error));
+    const status = document.getElementById('banich-error');
+    if (status) status.remove();
     isF ? updF(on) : updR(on);
     updAnim();
 
-    const u = new URL(t.url), k = 'banich_' + u.origin;
-    try {
-      chrome.storage.local.get([k], s => { const o = s[k] || {font:false, rtl:false}; o[type] = on; chrome.storage.local.set({[k]:o}); });
-    } catch {}
-    chrome.runtime.sendMessage({ type:'BANICH_UPDATE', fontActive: isF ? on : fActive, rtlActive: isF ? rActive : on, tabId: t.id });
-  } catch(e) { console.error('Banich toggle:', e); }
+    extensionApi.runtime.sendMessage({ type:'BANICH_UPDATE', fontActive: isF ? on : fActive, rtlActive: isF ? rActive : on, tabId: t.id }).catch(error => console.warn('Banich icon:', error));
+  } catch(e) {
+    updF(fActive); updR(rActive);
+    let status = document.getElementById('banich-error');
+    if (!status) {
+      status = document.createElement('p');
+      status.id = 'banich-error';
+      status.setAttribute('role', 'alert');
+      document.body.appendChild(status);
+    }
+    status.textContent = 'اعمال تنظیمات ناموفق: ' + (e.message || String(e));
+    console.error('Banich toggle:', e);
+  }
+  finally { saving = false; }
 }; }
 
 // ── Events ─────────────────────────────────────────────────────
-fontRow.addEventListener('click', handler('font'));
-rtlRow.addEventListener('click', handler('rtl'));
-fontSwitch.addEventListener('click', e => e.stopPropagation());
-rtlSwitch.addEventListener('click', e => e.stopPropagation());
+fontRow.addEventListener('click', e => { if (!e.target.closest('label, input')) fontSwitch.click(); });
+rtlRow.addEventListener('click', e => { if (!e.target.closest('label, input')) rtlSwitch.click(); });
+fontSwitch.addEventListener('change', handler('font'));
+rtlSwitch.addEventListener('change', handler('rtl'));
 themeBtn.addEventListener('click', nextTheme);
 
 // ── Init ───────────────────────────────────────────────────────
