@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Banich",
-  "version": "6.0",
+  "version": "5.6",
   "description": "بانیچ، دستیار فارسی‌خوان کروم | by شوان",
   "permissions": [
     "activeTab",
@@ -22,15 +22,7 @@
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"],
-      "run_at": "document_end",
-      "all_frames": true,
-      "match_about_blank": true
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["fonts/*"],
-      "matches": ["<all_urls>"]
+      "run_at": "document_end"
     }
   ],
   "background": {
